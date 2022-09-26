@@ -5,8 +5,8 @@ public class Student {
 	String studentNumber;
 	String name;
 	int departmentId;
-	int year;
-	
+	int year;	
+	public Student() {}
 	public int getId() {
 		return id;
 	}
