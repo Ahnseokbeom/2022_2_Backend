@@ -5,7 +5,8 @@ public class Student {
 	String studentNumber;
 	String name;
 	int departmentId;
-	int year;	
+	int year;
+	String departmentName;
 	public int getId() {
 		return id;
 	}
@@ -29,6 +30,12 @@ public class Student {
 	}
 	public void setDepartmentId(int departmentId) {
 		this.departmentId = departmentId;
+	}
+	public String getDepartmentName() {
+		return departmentName;
+	}
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
 	}
 	public int getYear() {
 		return year;
