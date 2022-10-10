@@ -1,6 +1,9 @@
 package net.skhu.dto;
 
-public class Department {
+import java.io.Serializable;
+
+public class Department implements Serializable{
+	private static final long seriaVersionUID = 1L;
 	int id;
 	String departmentName;
 
