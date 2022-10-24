@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.skhu.mapper.ProjectMapper">
+	<select id = "findAll" resultMap="ProjectWithManager">
+	select * from project p join manager m on m.id = p.managerId;
+	</select>
+	<resultMap id="ProjectWithManager"
+		type="net.skhu.dto.Project">
+		<id property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="managerId" column="managerId" />
+		<result property="progress" column="progress" />
+		<result property="priority" column="priority" />
+		<association property="manager"
+			javaType="net.skhu.dto.Manager">
+			<id property="id" column="id" />
+			<result property="name" column="name" />
+			<result property="phone" column="phone" />
+			<result property="office" column="office" />
+			<result property="email" column="email" />
+		</association>
+	</resultMap>
+</mapper>
