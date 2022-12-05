@@ -13,7 +13,6 @@ import lombok.Setter;
 
 @Data
 @Entity
-@Getter
 public class Student {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
