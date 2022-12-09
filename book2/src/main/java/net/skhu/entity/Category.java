@@ -1,5 +1,6 @@
 package net.skhu.entity;
 
+
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -21,4 +22,5 @@ public class Category {
 	
 	@OneToMany(mappedBy="category")
 	List<Book> books;
+	
 }
