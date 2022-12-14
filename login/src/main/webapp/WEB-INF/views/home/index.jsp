@@ -66,18 +66,7 @@ th {
 </style>
 </head>
 <body>
-	<div class="main-menu">
-		<div>
-			<h1>로그인 연습</h1>
-			<sec:authorize access="not authenticated">
-				<a class="right" href="${R}login">로그인</a>
-				<a class="right" href="${R}signUp">회원가입</a>
-			</sec:authorize>
-			<sec:authorize access="authenticated">
-				<a class="right" href="${R}logout_processing">로그아웃</a>
-			</sec:authorize>
-		</div>
-	</div>
+	<%@ include file="/WEB-INF/views/include/mainMenu.jsp" %>
 	<div class="container2">
 		<div class="nav">&gt; 시스템 관리 &gt; 로그기록</div>
 		<div class="panel">

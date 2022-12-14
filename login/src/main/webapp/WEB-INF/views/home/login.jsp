@@ -73,7 +73,7 @@ div.input i {
 <body>
 	<div class="main-menu">
 		<div>
-			<h1>로그인 연습</h1>
+			<h1><a href="${R}">로그인 연습</a></h1>
 		</div>
 	</div>
 	<div class="container2">

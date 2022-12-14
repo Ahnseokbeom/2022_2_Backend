@@ -9,7 +9,7 @@
 <body>
 <div class="main-menu">
 		<div>
-			<h1>로그인 연습</h1>
+			<h1><a href="${R}">로그인 연습</a></h1>
 			<sec:authorize access="not authenticated">
 				<a class="right" href="${R}login">로그인</a>
 				<a class="right" href="${R}signUp">회원가입</a>
