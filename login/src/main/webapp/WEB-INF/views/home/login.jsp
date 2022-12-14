@@ -101,9 +101,7 @@ div.input i {
 				</form>
 			</div>
 		</div>
-		<div class="footer">
-			<div style="margin-top: 5px;">로그인 연습</div>
-		</div>
+		<%@ include file="/WEB-INF/views/include/footer.jsp" %>
 	</div>
 </body>
 </html>

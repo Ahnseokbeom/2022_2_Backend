@@ -92,9 +92,7 @@ p {
 				<a href="${R}login" class="btn2"> 로그인 하기</a>
 			</div>
 		</div>
-		<div class="footer">
-			<div style="margin-top: 5px;">로그인 연습</div>
-		</div>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>
 	</div>
 </body>
 </html>
