@@ -22,4 +22,5 @@ public class GlobalExceptionHandler {
 		model.addAttribute("message", "접근 권한이 없습니다.");
 		return "error";
 	}
+	
 }
