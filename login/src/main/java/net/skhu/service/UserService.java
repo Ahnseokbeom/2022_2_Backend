@@ -1,7 +1,6 @@
 package net.skhu.service;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,9 +8,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-
+import net.skhu.config.ModelMapperConfig.MyModelMapper;
 import net.skhu.entity.User;
+import net.skhu.entity.UserRole;
 import net.skhu.model.Pagination;
+import net.skhu.model.UserDto;
 import net.skhu.model.UserSignUp;
 import net.skhu.repository.UserRepository;
 
@@ -21,9 +22,16 @@ public class UserService {
 	UserRepository userRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	MyModelMapper modelMapper;
 
-	public List<User> findAll() {
-		return userRepository.findAll();
+	public UserDto findById(int id) {
+		var userEntity = userRepository.findById(id).get();
+		var userDto = modelMapper.map(userEntity, UserDto.class);
+		List<UserRole> userRole = userEntity.getUserRoles();
+		String[] roles = userRole.stream().map(UserRole::getRole).toArray(String[]::new);
+		userDto.setRoles(roles);
+		return userDto;
 	}
 
 	public boolean hasErrors(UserSignUp userSignUp, BindingResult bindingResult) {
@@ -41,25 +49,16 @@ public class UserService {
 		return false;
 	}
 
-	public User createEntity(UserSignUp userSignUp) {
-		User user = new User();
-		user.setLoginName(userSignUp.getLoginName());
-		user.setPassword(passwordEncoder.encode(userSignUp.getPasswd1()));
-		user.setName(userSignUp.getName());
-		user.setEmail(userSignUp.getEmail());
-		user.setEnabled(true);
-		return user;
-	}
-
 	public void save(UserSignUp userSignUp) {
-		User user = createEntity(userSignUp);
+		User user = modelMapper.map(userSignUp, User.class);
+		user.setPassword(passwordEncoder.encode(userSignUp.getPasswd1()));
 		userRepository.save(user);
 	}
 
 	private static Sort[] orderBy = new Sort[] { Sort.by(Sort.Direction.DESC, "id"), Sort.by(Sort.Direction.DESC, "id"),
-			Sort.by(Sort.Direction.ASC, "loginName"), Sort.by(Sort.Direction.ASC, "name"), };
+			Sort.by(Sort.Direction.ASC, "loginName"), Sort.by(Sort.Direction.ASC, "name") };
 
-	public List<User> findAll(Pagination pagination) {
+	public List<UserDto> findAll(Pagination pagination) {
 		int pg = pagination.getPg() - 1, sz = pagination.getSz(), si = pagination.getSi(), od = pagination.getOd();
 		String st = pagination.getSt();
 		Page<User> page = null;
@@ -70,6 +69,14 @@ public class UserService {
 		else
 			page = userRepository.findAll(PageRequest.of(pg, sz, orderBy[od]));
 		pagination.setRecordCount((int) page.getTotalElements());
-		return page.getContent();
+		List<User> userEntities = page.getContent();
+		List<UserDto> userDtos = modelMapper.mapList(userEntities, UserDto.class);
+		for (int i = 0; i < userDtos.size(); ++i) {
+			User user = userEntities.get(i);
+			List<UserRole> userRoles = user.getUserRoles();
+			String[] roles = userRoles.stream().map(UserRole::getRole).toArray(String[]::new);
+			userDtos.get(i).setRoles(roles);
+		}
+		return userDtos;
 	}
 }

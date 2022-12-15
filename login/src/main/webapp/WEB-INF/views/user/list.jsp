@@ -92,8 +92,8 @@ th {
 								<td>${ user.name }</td>
 								<td>${ user.email }</td>
 								<td>${ user.enabled ? "활성" : "" }</td>
-								<td><c:forEach var="useRole" items="${ user.userRoles }">
-										<span>${ userRole.role }</span>
+								<td><c:forEach var="role" items="${ user.roles }">
+										<span>${ role }</span>
 									</c:forEach></td>
 							</tr>
 						</c:forEach>
