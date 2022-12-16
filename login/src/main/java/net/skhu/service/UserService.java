@@ -112,4 +112,8 @@ public class UserService {
 		}
 		return userDtos;
 	}
+	
+	public void deleteById(int id) {
+		userRepository.deleteById(id);
+	}
 }
