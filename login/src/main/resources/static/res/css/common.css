@@ -208,3 +208,10 @@ ul.pagination li:hover {
 	color: white;
 	background-color: #26F;
 }
+[data-url]:hover {
+	cursor: pointer;
+}
+
+tr[data-url]:hover {
+	background-color: #ffc;
+}
