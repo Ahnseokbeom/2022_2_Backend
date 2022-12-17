@@ -4,7 +4,7 @@
 	prefix="sec"%>
 <div class="main-menu">
 	<div>
-		<h1>소프 게시판</h1>
+		<a data-url="${R}"><h1>로그인 연습</h1></a>
 		<sec:authorize access="not authenticated">
 			<a class="right" href="${R}login">로그인</a>
 			<a class="right" href="${R}signUp">회원가입</a>
