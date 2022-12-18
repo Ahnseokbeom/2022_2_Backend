@@ -92,4 +92,6 @@ public class ArticleService {
 		article.setModifiedTime(new Date());
 		articleRepository.save(article);
 	}
+	
+	public void deleteById(int id) { articleRepository.deleteById(id); }
 }

@@ -29,24 +29,33 @@ article div.body {
 	line-height: 2;
 	margin-bottom: 30px;
 }
-article .btn2{margin-right : 5px;}
+
+article .btn2 {
+	margin-right: 5px;
+}
 </style>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/include/mainMenu.jsp"%>
 	<div class="container2">
-		<div class="nav">&gt; 게시판 &gt; 공지사항</div>
+		<div class="nav">&gt; 게시판 &gt; ${ board.title }</div>
 		<article>
-			<a class="btn2 small right" href="list?${pagination.queryString}">목록으로</a>
-			<a class="btn2 small right blue" href="edit?id=${article.id}&${pagination.queryString}"> 
-			<i class="fa fa-pencil-square-o"></i> 수정</a>
+			<div class="error">${ error }</div>
+			<a class="btn2 small right" href="list?${pagination.queryString}">
+				<i class="fa fa-list-ul"></i> 목록으로
+			</a> <a class="btn2 small right red"
+				href="delete?id=${article.id}&${pagination.queryString}"
+				data-confirm-delete> <i class="fa fa-trash-o"></i> 삭제
+			</a> <a class="btn2 small right blue"
+				href="edit?id=${article.id}&${pagination.queryString}"> <i
+				class="fa fa-pencil-square-o"></i> 수정
+			</a>
 			<h2>${ article.title }</h2>
 			<div class="header">
 				<span>${ article.userName }</span> <span><fmt:formatDate
 						value="${ article.modifiedTime }" pattern="yyyy-MM-dd HH:mm:ss" /></span>
 			</div>
 			<div class="body">${ article.body }</div>
-			<a class="btn2 small" href="list?${pagination.queryString}">목록으로</a>
 		</article>
 		<%@ include file="/WEB-INF/views/include/footer.jsp"%>
 	</div>
