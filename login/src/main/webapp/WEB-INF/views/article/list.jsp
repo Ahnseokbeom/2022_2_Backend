@@ -59,16 +59,9 @@ td:nth-child(1), th:nth-child(1) {
 					<form:hidden path="bd" value="${ pagination.bd }" />
 					<button type="submit" class="btn2 cyan small">조회</button>
 					<a class="btn2 small" href="list?bd=${pagination.bd}">초기화</a>
-					<form:select path="sz" class="right autosubmit">
-						<form:option value="2" />
-						<form:option value="3" />
-						<form:option value="4" />
-						<form:option value="5" />
-						<form:option value="10" />
-						<form:option value="15" />
-						<form:option value="30" />
-						<form:option value="100" />
-					</form:select>
+					<a class="btn2 blue small right"
+						href="create?${pagination.queryString}"> 
+						<i class="fa fa-pencil-square-o"></i> 글 등록</a>
 				</form:form>
 				<table>
 					<thead>
