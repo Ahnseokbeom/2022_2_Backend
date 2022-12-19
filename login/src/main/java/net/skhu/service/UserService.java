@@ -2,7 +2,7 @@ package net.skhu.service;
 
 import java.util.List;
 import javax.transaction.Transactional;
-
+import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,9 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-
 import net.skhu.config.MyUserDetails;
-import net.skhu.config.ModelMapperConfig.MyModelMapper;
 import net.skhu.entity.User;
 import net.skhu.entity.UserRole;
 import net.skhu.model.Pagination;
@@ -33,17 +31,8 @@ public class UserService {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	@Autowired
-	MyModelMapper modelMapper;
+	ModelMapper modelMapper;
 
-//	public UserEdit findById(int id) {
-//		var userEntity = userRepository.findById(id).get();
-//		var userEdit = modelMapper.map(userEntity, UserEdit.class);
-//		List<UserRole> userRole = userEntity.getUserRoles();
-//		String[] roles = userRole.stream().map(UserRole::getRole).toArray(String[]::new);
-//		userEdit.setRoles(roles);
-//		return userEdit;
-//	}
-	
 	public UserEdit findById(int id) {
 		var userEntity = userRepository.findById(id).get();
 		return modelMapper.map(userEntity, UserEdit.class);
@@ -101,28 +90,6 @@ public class UserService {
 	private static Sort[] orderBy = new Sort[] { Sort.by(Sort.Direction.DESC, "id"), Sort.by(Sort.Direction.DESC, "id"),
 			Sort.by(Sort.Direction.ASC, "loginName"), Sort.by(Sort.Direction.ASC, "name") };
 
-//	public List<UserDto> findAll(Pagination pagination) {
-//		int pg = pagination.getPg() - 1, sz = pagination.getSz(), si = pagination.getSi(), od = pagination.getOd();
-//		String st = pagination.getSt();
-//		Page<User> page = null;
-//		if (si == 1)
-//			page = userRepository.findByLoginNameStartsWith(st, PageRequest.of(pg, sz, orderBy[od]));
-//		else if (si == 2)
-//			page = userRepository.findByNameStartsWith(st, PageRequest.of(pg, sz, orderBy[od]));
-//		else
-//			page = userRepository.findAll(PageRequest.of(pg, sz, orderBy[od]));
-//		pagination.setRecordCount((int) page.getTotalElements());
-//		List<User> userEntities = page.getContent();
-//		List<UserDto> userDtos = modelMapper.mapList(userEntities, UserDto.class);
-//		for (int i = 0; i < userDtos.size(); ++i) {
-//			User user = userEntities.get(i);
-//			List<UserRole> userRoles = user.getUserRoles();
-//			String[] roles = userRoles.stream().map(UserRole::getRole).toArray(String[]::new);
-//			userDtos.get(i).setRoles(roles);
-//		}
-//		return userDtos;
-//	}
-	
 	public List<UserDto> findAll(Pagination pagination) {
 		int pg = pagination.getPg() - 1, sz = pagination.getSz(), si = pagination.getSi(), od = pagination.getOd();
 		String st = pagination.getSt();
@@ -138,14 +105,25 @@ public class UserService {
 		return modelMapper.map(userEntities, new TypeToken<List<UserDto>>() {
 		}.getType());
 	}
-	
+
 	public void deleteById(int id) {
 		userRepository.deleteById(id);
 	}
-	
+
 	public User getCurrentUser() {
-		var myUserDetail = (MyUserDetails)SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
-		return myUserDetail.getUser();
+		var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof MyUserDetails)
+			return ((MyUserDetails) principal).getUser();
+		return null;
+	}
+
+	public boolean isCurrentUserAdmin() {
+		User user = getCurrentUser();
+		if (user == null)
+			return false;
+		for (var userRole : user.getUserRoles())
+			if (userRole.getRole().equals("ROLE_ADMIN"))
+				return true;
+		return false;
 	}
 }
