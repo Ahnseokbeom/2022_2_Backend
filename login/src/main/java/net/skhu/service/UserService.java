@@ -2,6 +2,8 @@ package net.skhu.service;
 
 import java.util.List;
 import javax.transaction.Transactional;
+
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,13 +35,18 @@ public class UserService {
 	@Autowired
 	MyModelMapper modelMapper;
 
+//	public UserEdit findById(int id) {
+//		var userEntity = userRepository.findById(id).get();
+//		var userEdit = modelMapper.map(userEntity, UserEdit.class);
+//		List<UserRole> userRole = userEntity.getUserRoles();
+//		String[] roles = userRole.stream().map(UserRole::getRole).toArray(String[]::new);
+//		userEdit.setRoles(roles);
+//		return userEdit;
+//	}
+	
 	public UserEdit findById(int id) {
 		var userEntity = userRepository.findById(id).get();
-		var userEdit = modelMapper.map(userEntity, UserEdit.class);
-		List<UserRole> userRole = userEntity.getUserRoles();
-		String[] roles = userRole.stream().map(UserRole::getRole).toArray(String[]::new);
-		userEdit.setRoles(roles);
-		return userEdit;
+		return modelMapper.map(userEntity, UserEdit.class);
 	}
 
 	public boolean hasErrors(UserSignUp userSignUp, BindingResult bindingResult) {
@@ -94,6 +101,28 @@ public class UserService {
 	private static Sort[] orderBy = new Sort[] { Sort.by(Sort.Direction.DESC, "id"), Sort.by(Sort.Direction.DESC, "id"),
 			Sort.by(Sort.Direction.ASC, "loginName"), Sort.by(Sort.Direction.ASC, "name") };
 
+//	public List<UserDto> findAll(Pagination pagination) {
+//		int pg = pagination.getPg() - 1, sz = pagination.getSz(), si = pagination.getSi(), od = pagination.getOd();
+//		String st = pagination.getSt();
+//		Page<User> page = null;
+//		if (si == 1)
+//			page = userRepository.findByLoginNameStartsWith(st, PageRequest.of(pg, sz, orderBy[od]));
+//		else if (si == 2)
+//			page = userRepository.findByNameStartsWith(st, PageRequest.of(pg, sz, orderBy[od]));
+//		else
+//			page = userRepository.findAll(PageRequest.of(pg, sz, orderBy[od]));
+//		pagination.setRecordCount((int) page.getTotalElements());
+//		List<User> userEntities = page.getContent();
+//		List<UserDto> userDtos = modelMapper.mapList(userEntities, UserDto.class);
+//		for (int i = 0; i < userDtos.size(); ++i) {
+//			User user = userEntities.get(i);
+//			List<UserRole> userRoles = user.getUserRoles();
+//			String[] roles = userRoles.stream().map(UserRole::getRole).toArray(String[]::new);
+//			userDtos.get(i).setRoles(roles);
+//		}
+//		return userDtos;
+//	}
+	
 	public List<UserDto> findAll(Pagination pagination) {
 		int pg = pagination.getPg() - 1, sz = pagination.getSz(), si = pagination.getSi(), od = pagination.getOd();
 		String st = pagination.getSt();
@@ -106,14 +135,8 @@ public class UserService {
 			page = userRepository.findAll(PageRequest.of(pg, sz, orderBy[od]));
 		pagination.setRecordCount((int) page.getTotalElements());
 		List<User> userEntities = page.getContent();
-		List<UserDto> userDtos = modelMapper.mapList(userEntities, UserDto.class);
-		for (int i = 0; i < userDtos.size(); ++i) {
-			User user = userEntities.get(i);
-			List<UserRole> userRoles = user.getUserRoles();
-			String[] roles = userRoles.stream().map(UserRole::getRole).toArray(String[]::new);
-			userDtos.get(i).setRoles(roles);
-		}
-		return userDtos;
+		return modelMapper.map(userEntities, new TypeToken<List<UserDto>>() {
+		}.getType());
 	}
 	
 	public void deleteById(int id) {

@@ -3,6 +3,7 @@ package net.skhu.service;
 import java.util.Date;
 import java.util.List;
 
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +46,28 @@ public class ArticleService {
 		return modelMapper.map(article, ArticleEdit.class);
 	}
 
+//	public List<ArticleDto> findAll(Pagination pagination) {
+//		int pg = pagination.getPg() - 1, sz = pagination.getSz(), si = pagination.getSi(), bd = pagination.getBd();
+//		String st = pagination.getSt();
+//		var pageRequest = PageRequest.of(pg, sz, orderBy);
+//		Page<Article> page = null;
+//		if (si == 1)
+//			page = articleRepository.findByBoardIdAndTitleContains(bd, st, pageRequest);
+//		else if (si == 2)
+//			page = articleRepository.findByBoardIdAndUserNameStartsWith(bd, st, pageRequest);
+//		else
+//			page = articleRepository.findByBoardId(bd, pageRequest);
+//		pagination.setRecordCount((int) page.getTotalElements());
+//		List<Article> articleEntities = page.getContent();
+//		List<ArticleDto> articleDtos = modelMapper.mapList(articleEntities, ArticleDto.class);
+//		for (int i = 0; i < articleDtos.size(); ++i) {
+//			Article article = articleEntities.get(i);
+//			ArticleDto articleDto = articleDtos.get(i);
+//			articleDto.setUserName(article.getUser().getName());
+//		}
+//		return articleDtos;
+//	}
+	
 	public List<ArticleDto> findAll(Pagination pagination) {
 		int pg = pagination.getPg() - 1, sz = pagination.getSz(), si = pagination.getSi(), bd = pagination.getBd();
 		String st = pagination.getSt();
@@ -58,13 +81,8 @@ public class ArticleService {
 			page = articleRepository.findByBoardId(bd, pageRequest);
 		pagination.setRecordCount((int) page.getTotalElements());
 		List<Article> articleEntities = page.getContent();
-		List<ArticleDto> articleDtos = modelMapper.mapList(articleEntities, ArticleDto.class);
-		for (int i = 0; i < articleDtos.size(); ++i) {
-			Article article = articleEntities.get(i);
-			ArticleDto articleDto = articleDtos.get(i);
-			articleDto.setUserName(article.getUser().getName());
-		}
-		return articleDtos;
+		return modelMapper.map(articleEntities, new TypeToken<List<ArticleDto>>() {
+		}.getType());
 	}
 
 	@Transactional(isolation = Isolation.REPEATABLE_READ)
