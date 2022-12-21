@@ -6,12 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>로그인</title>
-<link rel="stylesheet" href="${R}res/common.css" />
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="${R}res/common.js"></script>
+<%@ include file="/WEB-INF/views/include/head.jsp"%>
 <style>
 div.container2 {
 	padding-top: 100px;
@@ -19,7 +14,6 @@ div.container2 {
 
 div.login-form {
 	width: 800px;
-	height: 500px;
 	background-color: #dee;
 	margin: 0px auto 200px auto;
 	text-align: center;
@@ -73,14 +67,10 @@ div.input i {
 </style>
 </head>
 <body>
-	<div class="main-menu">
-		<div>
-			<h1>로그인</h1>
-		</div>
-	</div>
+	<%@ include file="/WEB-INF/views/include/mainMenu.jsp"%>
 	<div class="container2">
 		<div class="login-form">
-			<h1 class="login-header">로그인</h1>
+			<h1 class="login-header">소프 게시판 로그인</h1>
 			<div class="login-body">
 				<img src="${R}res/images/skhu_logo.png" style="width: 200px;" />
 				<form method="post" action="${R}login_processing">
@@ -101,12 +91,13 @@ div.input i {
 					</button>
 					<a href="${R}signUp" class="btn2"><i class="fa fa-user-plus"></i>
 						회원가입</a>
+					<c:if test="${ param.error ne null }">
+						<div class="error">아이디 또는 비밀번호가 일치하지 않습니다</div>
+					</c:if>
 				</form>
 			</div>
 		</div>
-		<div class="footer">
-			<div style="margin-top: 5px;">로그인 연습</div>
-		</div>
+		<%@ include file="/WEB-INF/views/include/footer.jsp"%>
 	</div>
 </body>
 </html>

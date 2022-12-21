@@ -1,47 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://www.springframework.org/security/tags"
-	prefix="sec"%>
 <c:url var="R" value="/" />
 <!DOCTYPE html PUBLIC>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>로그인</title>
-<link rel="stylesheet" href="${R}res/common.css" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="${R}res/common.js"></script>
+<%@ include file="/WEB-INF/views/include/head.jsp"%>
 <style>
-div.container2 {
-	padding: 20px;
-}
-
-div.nav {
-	padding: 5px;
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 25px;
-}
-
 div.panel {
 	width: 1100px;
-	margin-bottom: 50px;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	box-shadow: 3px 3px 3px #ccc;
-}
-
-div.panel h1 {
-	margin: 0;
-	font-size: 14pt;
-	font-weight: bold;
-	background: linear-gradient(90deg, #def, #bcd);
-	padding: 10px 15px 7px 15px;
-}
-
-div.panel-body {
-	padding: 20px;
-	font-size:
 }
 
 select:nth-child(1) {
@@ -68,18 +36,7 @@ th {
 </style>
 </head>
 <body>
-	<div class="main-menu">
-		<ul>
-			<li class="title" data-url="${R}">로그인</li>
-			<sec:authorize access="not authenticated">
-				<li data-url="${R}login" class="right">로그인</li>
-				<li data-url="${R}signUp" class="right">회원가입</li>
-			</sec:authorize>
-			<sec:authorize access="authenticated">
-				<li data-url="${R}logout_processing" class="right">로그아웃</li>
-			</sec:authorize>
-		</ul>
-	</div>
+	<%@ include file="/WEB-INF/views/include/mainMenu.jsp"%>
 	<div class="container2">
 		<div class="nav">&gt; 시스템 관리 &gt; 로그기록</div>
 		<div class="panel">
@@ -146,9 +103,7 @@ th {
 				</ul>
 			</div>
 		</div>
-		<div class="footer">
-			<div style="margin-top: 5px;">로그인</div>
-		</div>
+		<%@ include file="/WEB-INF/views/include/footer.jsp"%>
 	</div>
 </body>
 </html>
