@@ -13,7 +13,7 @@
 			<li>공지사항</li>
 			<li>시스템 관리
 				<ul>
-					<li>사용자 목록</li>
+					<li data-url="${R}user/list">사용자 목록</li>
 					<li>로그 기록</li>
 				</ul>
 			</li>
