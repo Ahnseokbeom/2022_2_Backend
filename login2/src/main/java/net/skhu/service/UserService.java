@@ -1,6 +1,9 @@
 package net.skhu.service;
 
 import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import net.skhu.entity.User;
 import net.skhu.model.Pagination;
+import net.skhu.model.UserDto;
 import net.skhu.model.UserSignUp;
 import net.skhu.repository.UserRepository;
 
@@ -19,6 +23,8 @@ public class UserService {
 	UserRepository userRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	ModelMapper modelMapper;
 
 	public List<User> findAll() {
 		return userRepository.findAll();
@@ -50,7 +56,8 @@ public class UserService {
 	}
 
 	public void save(UserSignUp userSignUp) {
-		User user = createEntity(userSignUp);
+		User user = modelMapper.map(userSignUp, User.class);
+		user.setPassword(passwordEncoder.encode((userSignUp.getPasswd1())));
 		userRepository.save(user);
 	}
 	
@@ -61,7 +68,7 @@ public class UserService {
 			Sort.by(Sort.Direction.ASC,"name")
 	};
 	
-	public List<User> findAll(Pagination pagination) {
+	public List<UserDto> findAll(Pagination pagination) {
 		int pg = pagination.getPg() - 1, sz = pagination.getSz(), si = pagination.getSi(), od = pagination.getOd();
 		String st = pagination.getSt();
 		Page<User> page = null;
@@ -72,6 +79,7 @@ public class UserService {
 		else
 			page = userRepository.findAll(PageRequest.of(pg, sz, orderBy[od]));
 		pagination.setRecordCount((int) page.getTotalElements());
-		return page.getContent();
+		List<User> userEntities = page.getContent();
+		return modelMapper.map(userEntities, new TypeToken<List<UserDto>>() {}.getType());
 	}
 }
