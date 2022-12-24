@@ -10,10 +10,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import net.skhu.entity.User;
 import net.skhu.model.Pagination;
 import net.skhu.model.UserDto;
+import net.skhu.model.UserEdit;
 import net.skhu.model.UserSignUp;
 import net.skhu.repository.UserRepository;
 
@@ -54,10 +56,31 @@ public class UserService {
 		user.setEnabled(true);
 		return user;
 	}
+	
+	public boolean hasErrors(UserEdit userEdit, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			return true;
+		User user = userRepository.findByLoginName(userEdit.getLoginName());
+		if (user != null && user.getId() != userEdit.getId()) {
+			bindingResult.rejectValue("loginName", null, "사용자 아이디가 중복됩니다.");
+			return true;
+		}
+		return false;
+	}
 
 	public void save(UserSignUp userSignUp) {
 		User user = modelMapper.map(userSignUp, User.class);
 		user.setPassword(passwordEncoder.encode((userSignUp.getPasswd1())));
+		userRepository.save(user);
+	}
+	
+	@Transactional
+	public void save(UserEdit userEdit) {
+		User user = userRepository.findById(userEdit.getId()).get();
+		user.setLoginName(userEdit.getLoginName());
+		user.setName(userEdit.getName());
+		user.setEmail(userEdit.getEmail());
+		user.setEnabled(userEdit.isEnabled());
 		userRepository.save(user);
 	}
 	
