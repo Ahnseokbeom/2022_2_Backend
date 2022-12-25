@@ -28,6 +28,11 @@ public class UserService {
 	@Autowired
 	ModelMapper modelMapper;
 
+	public UserEdit findById(int id) {
+		var userEntity = userRepository.findById(id).get();
+		return modelMapper.map(userEntity, UserEdit.class);
+	}
+	
 	public List<User> findAll() {
 		return userRepository.findAll();
 	}
